@@ -121,5 +121,6 @@
     <string name="title_home">Home</string>
     <string name="title_schedule">Schedule</string>
     <string name="title_user">User</string>
+    <string name="schedule">scheadule</string>
 
 </resources>
