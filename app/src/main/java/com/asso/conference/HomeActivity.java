@@ -4,19 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.asso.conference.mainPage.ViewPagerAdapter;
+import com.asso.conference.mainPage.BrowserFragment;
+import com.asso.conference.mainPage.HomePageFragment;
+import com.asso.conference.mainPage.LoginFragment;
 import com.asso.conference.ui.MainActivity;
 
 public class HomeActivity extends AppCompatActivity {
@@ -52,12 +52,8 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        
 
-        WebView webView = findViewById(R.id.webview);
-
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("http://www.google.com");
+        BrowserFragment.newInstance("http://www.google.com");
 
         mTextMessage = (TextView) findViewById(R.id.message);
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -95,7 +91,30 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager)
     {
-        viewPager.setAdapter(new ViewPagerAdapter(this));
+        FragmentStatePagerAdapter adapter=new FragmentStatePagerAdapter(
+                getSupportFragmentManager()
+        ){
+
+            @Override
+            public int getCount() {
+                // This makes sure getItem doesn't use a position
+                // that is out of bounds of our array of URLs
+                //return toVisit.length;
+                return 3;
+            }
+
+            @Override
+            public Fragment getItem(int position) {
+                // Here is where all the magic of the adapter happens
+                // As you can see, this is really simple.
+                if(position == 1){
+                    return BrowserFragment.newInstance("https://xp2018.sched.com/mobile/");
+                }
+                return LoginFragment.newInstance();
+                //return HomePageFragment.newInstance();
+            }
+        };
+        viewPager.setAdapter(adapter);
     }
 
     @Override
