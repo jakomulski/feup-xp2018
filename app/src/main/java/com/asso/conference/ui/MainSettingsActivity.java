@@ -18,6 +18,7 @@ package com.asso.conference.ui;
  */
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,7 @@ public class MainSettingsActivity extends AppCompatActivity {
 
     public static final int START_MAIN_SETTINGS = 1;
     private CheckBox cb_fud;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,8 @@ public class MainSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_settings);
         cb_fud = (CheckBox) this.findViewById(R.id.cb_scan_filter_unpaired);
         cb_fud.setChecked(Settings.getInstance().isFilter_unpaired_devices());
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Save");
     }

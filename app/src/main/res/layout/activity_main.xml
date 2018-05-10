@@ -2,12 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp"
     android:orientation="vertical"
-    tools:context=".ui.MainActivity" >
+    android:paddingBottom="0dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    tools:context=".ui.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -21,11 +21,11 @@
         android:id="@+id/message"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@color/message_background"
         android:gravity="center"
         android:paddingLeft="10dip"
-        android:background="@color/message_background"
-        android:textSize="16dp"
-        android:text="" />
+        android:text=""
+        android:textSize="16dp" />
 
     <ListView
         android:id="@+id/deviceList"
@@ -37,8 +37,8 @@
         android:id="@+id/scanButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:enabled="true"
+        android:gravity="center"
         android:onClick="onScan"
         android:text="" />
 

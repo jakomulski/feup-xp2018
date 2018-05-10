@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -90,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements ScanResultsConsum
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.screen_title_main);
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitleTextColor(Color.LTGRAY);
         showMsg(Utility.htmlColorGreen("Ready"));
 
         Settings.getInstance().restore(this);
@@ -167,18 +170,7 @@ public class MainActivity extends AppCompatActivity implements ScanResultsConsum
             startActivityForResult(intent, MainSettingsActivity.START_MAIN_SETTINGS);
             return true;
         }
-        if (id == R.id.menu_main_help) {
-            Intent intent = new Intent(MainActivity.this, HelpActivity.class);
-            intent.putExtra(Constants.URI, Constants.MAIN_HELP);
-            startActivity(intent);
-            return true;
-        }
-        if (id == R.id.menu_main_about) {
-            Intent intent = new Intent(MainActivity.this, HelpActivity.class);
-            intent.putExtra(Constants.URI, Constants.MAIN_ABOUT);
-            startActivity(intent);
-            return true;
-        }
+
         return super.onOptionsItemSelected(item);
     }
 
