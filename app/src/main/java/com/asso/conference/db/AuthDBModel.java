@@ -9,8 +9,8 @@ import com.activeandroid.query.Update;
 @Table(name = "Auth")
 public class AuthDBModel extends Model {
 
-    @Column(name = "Id")
-    public Integer id;
+    @Column(name = "UserId")
+    public String userId;
     @Column(name = "Username")
     public String username;
     @Column(name = "FirstName")

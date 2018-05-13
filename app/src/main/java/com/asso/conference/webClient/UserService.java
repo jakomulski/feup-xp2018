@@ -39,7 +39,7 @@ public enum UserService {
 
         if(AuthDBModel.keyExists()){
             AuthDBModel authDBModel = AuthDBModel.getFirst();
-            final Call<UserModel> call = service.getUser(authDBModel.id);
+            final Call<UserModel> call = service.getUser(authDBModel.userId);
             call.enqueue(new Callback<UserModel>() {
                 @Override
                 public void onResponse(Call<UserModel> call, Response<UserModel> response) {

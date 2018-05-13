@@ -72,6 +72,14 @@ public class LoginFragment extends Fragment {
 
                 if(AuthDBModel.keyExists()){
                     AuthDBModel.updateToken(value.token);
+                } else{
+                    AuthDBModel authDBModel = new AuthDBModel();
+                    authDBModel.userId = value.id.toString();
+                    authDBModel.firstName =value.firstName;
+                    authDBModel.key = value.token;
+                    authDBModel.lastName = value.lastName;
+                    authDBModel.username = value.username;
+                    authDBModel.save();
                 }
                 UserService.INSTANCE.createAuthenticatedClient(value.token);
                 HomeActivity.loggedIn = true;
