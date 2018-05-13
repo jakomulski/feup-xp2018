@@ -1,8 +1,9 @@
 package com.asso.conference.webClient;
 
-import com.asso.conference.webClient.models.User;
-
-import java.util.List;
+import com.asso.conference.webClient.models.AuthModel;
+import com.asso.conference.webClient.models.LoginDataModel;
+import com.asso.conference.webClient.models.ResponseModel;
+import com.asso.conference.webClient.models.UserModel;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -12,5 +13,13 @@ import retrofit2.http.Path;
 
 public interface WebClientService {
     @POST("register")
-    Call<User> createUser(@Body User user);
+    Call<UserModel> createUser(@Body UserModel user);
+
+    //@FormUrlEncoded
+    @POST("login")
+    Call<ResponseModel<AuthModel>> logIn(@Body LoginDataModel loginDataModel);
+
+    @GET("user/{id}")
+    Call<UserModel> getUser(@Path("id") int id);
+
 }

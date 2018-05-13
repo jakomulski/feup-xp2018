@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Debug;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -12,21 +12,25 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.asso.conference.db.AuthDBModel;
 import com.asso.conference.mainPage.BrowserFragment;
 import com.asso.conference.mainPage.HomePageFragment;
 import com.asso.conference.mainPage.LoginFragment;
 import com.asso.conference.ui.MainActivity;
+import com.asso.conference.webClient.BookmarkCallback;
+import com.asso.conference.webClient.UserService;
 
 public class HomeActivity extends AppCompatActivity {
     private TextView mTextMessage;
     Toolbar toolbar;
+
+    public static boolean loggedIn = true;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -56,9 +60,16 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        //ActiveAndroid.initialize(this);
 
-        //BrowserFragment.newInstance("http://www.google.com");
+        if (android.os.Build.VERSION.SDK_INT > 9)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
+
+        setContentView(R.layout.activity_home);
 
         mTextMessage = (TextView) findViewById(R.id.message);
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -67,7 +78,7 @@ public class HomeActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("XP 2018");
-        toolbar.setSubtitle("Welcome, username");
+        toolbar.setSubtitle("");
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setSubtitleTextColor(Color.LTGRAY);
         //toolbar.
@@ -120,12 +131,38 @@ public class HomeActivity extends AppCompatActivity {
                 // As you can see, this is really simple.
                 if(position == 1){
                     return BrowserFragment.newInstance("https://xp2018.sched.com/mobile/");
+                } else{
+
+
+                    if(loggedIn && UserService.INSTANCE.isAuthenticated(new BookmarkCallback<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean value) {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            finish();
+                            startActivity(getIntent());
+                            loggedIn = false;
+                        }
+                    }))
+                    {
+                        //updateData(AuthDBModel.getFirst());
+                        return HomePageFragment.newInstance();
+                    }
+
+                    return LoginFragment.newInstance();
                 }
-                return LoginFragment.newInstance();
+
                 //return HomePageFragment.newInstance();
             }
         };
         viewPager.setAdapter(adapter);
+    }
+
+    private void updateData(AuthDBModel authDBModel){
+        toolbar.setSubtitle("Welcome, "+ authDBModel.username);
     }
 
     @Override

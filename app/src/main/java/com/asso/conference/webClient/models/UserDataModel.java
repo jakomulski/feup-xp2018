@@ -2,6 +2,6 @@ package com.asso.conference.webClient.models;
 
 import java.util.List;
 
-public class UserData {
+public class UserDataModel {
     public List<Integer> friends;
 }
