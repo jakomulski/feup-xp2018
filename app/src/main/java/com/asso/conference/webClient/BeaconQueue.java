@@ -1,6 +1,7 @@
 package com.asso.conference.webClient;
 
 import android.os.Environment;
+import android.util.Log;
 
 import com.asso.conference.webClient.models.BeaconModel;
 import com.squareup.moshi.Moshi;
@@ -14,16 +15,15 @@ import java.util.Queue;
 
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class BeaconQueue  {
-
+public enum BeaconQueue  {
+    INSTANCE;
     ObjectQueue<BeaconModel> queue;
 
-    public BeaconQueue(){
+    BeaconQueue(){
         File file = new File(Environment.getExternalStorageDirectory() + File.separator + "baconQueue.dat");
         try {
             QueueFile queueFile = new QueueFile.Builder(file).build();
             ObjectQueue.Converter<BeaconModel> converter = new MoshiConverter<>(new Moshi.Builder().build(), BeaconModel.class);
-            ObjectQueue<BeaconModel> queue = ObjectQueue.create(queueFile, converter);
             queue = ObjectQueue.create(queueFile, converter);
         } catch (IOException e) {
             e.printStackTrace();

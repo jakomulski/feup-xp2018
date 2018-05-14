@@ -26,8 +26,10 @@ import com.asso.conference.mainPage.HomePageFragment;
 import com.asso.conference.mainPage.LoginFragment;
 import com.asso.conference.mainPage.UserPageFragment;
 import com.asso.conference.ui.MainActivity;
+import com.asso.conference.webClient.BeaconQueue;
 import com.asso.conference.webClient.BookmarkCallback;
 import com.asso.conference.webClient.UserService;
+import com.asso.conference.webClient.models.BeaconModel;
 import com.asso.conference.webClient.models.UserModel;
 
 
@@ -137,7 +139,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
                 Wrapper<Consumer<UserModel>> userModelConsumer = new Wrapper<>();
-
+                
                 if(position == 1){
                     return BrowserFragment.newInstance("https://xp2018.sched.com/mobile/");
                 } else{
