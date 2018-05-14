@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.asso.conference.R;
 import com.asso.conference.common.Consumer;
 import com.asso.conference.common.Wrapper;
+import com.asso.conference.db.AuthDBModel;
 import com.asso.conference.webClient.models.UserModel;
 
 public class UserPageFragment extends Fragment {
@@ -35,11 +36,20 @@ public class UserPageFragment extends Fragment {
     // to create a new fragment
     public static Fragment newInstance(Wrapper<Consumer<UserModel>> userModelConsumer){
         UserPageFragment f=new UserPageFragment();
-        userModelConsumer.setValue(userModel->{
-            f.userData.setText(userModel.username);
-            f.userData.append("\n"+userModel.firstName);
-            f.userData.append("\n"+userModel.lastName);
-        });
+
+        if(AuthDBModel.exists()) {
+            AuthDBModel authDBModel = AuthDBModel.getFirst();
+//            f.userData.setText(""+authDBModel.username);
+//            f.userData.append("\n"+authDBModel.firstName);
+//            f.userData.append("\n"+authDBModel.lastName);
+        }
+
+
+//        userModelConsumer.setValue(userModel->{
+//            f.userData.setText(userModel.username);
+//            f.userData.append("\n"+userModel.firstName);
+//            f.userData.append("\n"+userModel.lastName);
+//        });
         return f;
     }
 

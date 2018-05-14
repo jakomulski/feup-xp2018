@@ -1,6 +1,5 @@
 package com.asso.conference.common;
 
-
 public class Wrapper<T> {
     private T value;
 
@@ -15,13 +14,7 @@ public class Wrapper<T> {
         if(this.value != null)
             consumer.consume(value);
     }
-
-    public Wrapper(T value) {
-        this.value = value;
-    }
-
     public T getValue() {
         return value;
     }
-
 }

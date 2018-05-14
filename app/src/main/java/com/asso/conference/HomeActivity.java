@@ -139,7 +139,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
                 Wrapper<Consumer<UserModel>> userModelConsumer = new Wrapper<>();
-                
+
                 if(position == 1){
                     return BrowserFragment.newInstance("https://xp2018.sched.com/mobile/");
                 } else{
