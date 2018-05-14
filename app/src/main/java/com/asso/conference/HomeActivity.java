@@ -18,19 +18,24 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.asso.conference.common.Consumer;
+import com.asso.conference.common.Wrapper;
 import com.asso.conference.db.AuthDBModel;
 import com.asso.conference.mainPage.BrowserFragment;
 import com.asso.conference.mainPage.HomePageFragment;
 import com.asso.conference.mainPage.LoginFragment;
+import com.asso.conference.mainPage.UserPageFragment;
 import com.asso.conference.ui.MainActivity;
 import com.asso.conference.webClient.BookmarkCallback;
 import com.asso.conference.webClient.UserService;
+import com.asso.conference.webClient.models.UserModel;
+
 
 public class HomeActivity extends AppCompatActivity {
     private TextView mTextMessage;
     Toolbar toolbar;
 
-    public static boolean loggedIn = true;
+    public  static boolean loggedIn = true;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -129,15 +134,19 @@ public class HomeActivity extends AppCompatActivity {
             public Fragment getItem(int position) {
                 // Here is where all the magic of the adapter happens
                 // As you can see, this is really simple.
+
+
+                Wrapper<Consumer<UserModel>> userModelConsumer = new Wrapper<>();
+
                 if(position == 1){
                     return BrowserFragment.newInstance("https://xp2018.sched.com/mobile/");
                 } else{
 
 
-                    if(loggedIn && UserService.INSTANCE.isAuthenticated(new BookmarkCallback<Boolean>() {
+                    if(loggedIn && UserService.INSTANCE.isAuthenticated(new BookmarkCallback<UserModel>() {
                         @Override
-                        public void onSuccess(Boolean value) {
-
+                        public void onSuccess(UserModel userModel) {
+                            userModelConsumer.ifPresent(c->c.consume(userModel));
                         }
 
                         @Override
@@ -148,8 +157,10 @@ public class HomeActivity extends AppCompatActivity {
                         }
                     }))
                     {
-                        //updateData(AuthDBModel.getFirst());
-                        return HomePageFragment.newInstance();
+                        if(position == 0)
+                            return HomePageFragment.newInstance();
+                        else
+                            return UserPageFragment.newInstance(userModelConsumer);
                     }
 
                     return LoginFragment.newInstance();

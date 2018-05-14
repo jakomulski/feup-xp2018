@@ -25,7 +25,7 @@ public enum UserService {
     WebClientService service;
 
     UserService(){
-        if(AuthDBModel.keyExists()){
+        if(AuthDBModel.exists()){
             AuthDBModel authDBModel = AuthDBModel.getFirst();
             createAuthenticatedClient(authDBModel.key);
         }
@@ -35,22 +35,22 @@ public enum UserService {
         service = retrofit.create(WebClientService.class);
     }
 
-    public boolean isAuthenticated(BookmarkCallback<Boolean> callback){
+    public boolean isAuthenticated(BookmarkCallback<UserModel> callback){
 
-        if(AuthDBModel.keyExists()){
+        if(AuthDBModel.exists()){
             AuthDBModel authDBModel = AuthDBModel.getFirst();
-            final Call<UserModel> call = service.getUser(authDBModel.userId);
-            call.enqueue(new Callback<UserModel>() {
+            final Call<ResponseModel<UserModel>> call = service.getUser(authDBModel.userId);
+            call.enqueue(new Callback<ResponseModel<UserModel>>() {
                 @Override
-                public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                public void onResponse(Call<ResponseModel<UserModel>> call, Response<ResponseModel<UserModel>> response) {
                     if(response.isSuccessful())
-                        callback.onSuccess(true);
+                        callback.onSuccess(response.body().success);
                     else
                         callback.onError();
                 }
 
                 @Override
-                public void onFailure(Call<UserModel> call, Throwable t) {
+                public void onFailure(Call<ResponseModel<UserModel>> call, Throwable t) {
 
                 }
             });

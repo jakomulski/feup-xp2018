@@ -20,6 +20,6 @@ public interface WebClientService {
     Call<ResponseModel<AuthModel>> logIn(@Body LoginDataModel loginDataModel);
 
     @GET("user/{id}")
-    Call<UserModel> getUser(@Path("id") String id);
+    Call<ResponseModel<UserModel>> getUser(@Path("id") String id);
 
 }

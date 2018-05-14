@@ -10,7 +10,7 @@ import com.activeandroid.query.Select;
 public class UserDBModel {
 
     @Column(name = "Id")
-    public Integer id;
+    public String id;
     @Column(name = "Username")
     public String username;
     @Column(name = "FirstName")

@@ -21,8 +21,6 @@ public class HomePageFragment extends Fragment {
                 container,
                 false);
 
-        // Just load whatever URL this fragment is
-        // created with.
         return view;
     }
 

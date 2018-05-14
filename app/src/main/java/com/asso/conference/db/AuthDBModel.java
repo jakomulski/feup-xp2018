@@ -30,7 +30,7 @@ public class AuthDBModel extends Model {
         this.key = key;
     }
 
-    public static boolean keyExists() {
+    public static boolean exists() {
         return new Select().from(AuthDBModel.class).exists();
     }
 
@@ -41,10 +41,4 @@ public class AuthDBModel extends Model {
     public static void updateToken(String token) {
         new Update(AuthDBModel.class).set("Key = ?",token).execute();
     }
-
-//    public static void insert(String token) {
-//        new Update(AuthDBModel.class).set("Token = ?",token).execute();
-//    }
-
-
 }

@@ -41,8 +41,6 @@ public class LoginFragment extends Fragment {
 
     private void createView(View view){
         usernameView = (EditText) view.findViewById(R.id.username);
-        //populateAutoComplete();
-
         passwordView = (EditText) view.findViewById(R.id.password);
         passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -70,8 +68,14 @@ public class LoginFragment extends Fragment {
                 if(value == null)
                     return;
 
-                if(AuthDBModel.keyExists()){
-                    AuthDBModel.updateToken(value.token);
+                if(AuthDBModel.exists()){
+                    AuthDBModel authDBModel = AuthDBModel.getFirst();
+                    authDBModel.userId = value.id.toString();
+                    authDBModel.firstName =value.firstName;
+                    authDBModel.key = value.token;
+                    authDBModel.lastName = value.lastName;
+                    authDBModel.username = value.username;
+                    authDBModel.save();
                 } else{
                     AuthDBModel authDBModel = new AuthDBModel();
                     authDBModel.userId = value.id.toString();

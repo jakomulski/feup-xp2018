@@ -6,5 +6,5 @@ public class UserModel {
     public String password;
     public String firstName;
     public String lastName;
-    public UserDataModel data;
+    public String data;
 }
