@@ -8,6 +8,8 @@ import android.util.Log;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
+    BeaconQueue queue = BeaconQueue.INSTANCE;
+
     @Override
     public void onReceive(final Context context, final Intent intent) {
         final ConnectivityManager connMgr = (ConnectivityManager) context
@@ -21,6 +23,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
         if (wifi.isAvailable() || mobile.isAvailable()) {
 
+            //TODO: send statistics
+            //Use BeaconQueue
             Log.d("Network Available ", "Flag No 1");
         }
     }

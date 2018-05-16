@@ -1,5 +1,6 @@
 package com.asso.conference;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -32,6 +33,8 @@ import com.asso.conference.webClient.BookmarkCallback;
 import com.asso.conference.webClient.UserService;
 import com.asso.conference.webClient.models.BeaconModel;
 import com.asso.conference.webClient.models.UserModel;
+
+import br.com.goncalves.pugnotification.notification.PugNotification;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -67,6 +70,9 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
         super.onCreate(savedInstanceState);
         //ActiveAndroid.initialize(this);
 
@@ -127,20 +133,16 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public int getCount() {
-                // This makes sure getItem doesn't use a position
-                // that is out of bounds of our array of URLs
-                //return toVisit.length;
                 return 3;
             }
 
             @Override
             public Fragment getItem(int position) {
-                // Here is where all the magic of the adapter happens
-                // As you can see, this is really simple.
-
 
                 Wrapper<Consumer<UserModel>> userModelConsumer = new Wrapper<>();
-                
+
+
+
                 if(position == 1){
                     return BrowserFragment.newInstance("https://xp2018.sched.com/mobile/");
                 } else{
@@ -149,7 +151,7 @@ public class HomeActivity extends AppCompatActivity {
                     if(loggedIn && UserService.INSTANCE.isAuthenticated(new BookmarkCallback<UserModel>() {
                         @Override
                         public void onSuccess(UserModel userModel) {
-                            userModelConsumer.ifPresent(c->c.consume(userModel));
+                            //userModelConsumer.ifPresent(c->c.consume(userModel));
                         }
 
                         @Override
@@ -163,13 +165,11 @@ public class HomeActivity extends AppCompatActivity {
                         if(position == 0)
                             return HomePageFragment.newInstance();
                         else
-                            return UserPageFragment.newInstance(userModelConsumer);
+                            return UserPageFragment.newInstance();
                     }
 
                     return LoginFragment.newInstance();
                 }
-
-                //return HomePageFragment.newInstance();
             }
         };
         viewPager.setAdapter(adapter);

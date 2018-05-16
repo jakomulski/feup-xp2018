@@ -41,9 +41,9 @@ public class MainSettingsActivity extends AppCompatActivity {
         cb_fud = (CheckBox) this.findViewById(R.id.cb_scan_filter_unpaired);
         cb_fud.setChecked(Settings.getInstance().isFilter_unpaired_devices());
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Save");
+        //setSupportActionBar(toolbar);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setTitle("Save");
     }
 
     @Override
