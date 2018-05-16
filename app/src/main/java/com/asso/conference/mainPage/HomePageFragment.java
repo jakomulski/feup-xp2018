@@ -24,8 +24,6 @@ public class HomePageFragment extends Fragment {
         return view;
     }
 
-    // This is the method the pager adapter will use
-    // to create a new fragment
     public static Fragment newInstance(){
         HomePageFragment f=new HomePageFragment();
         return f;

@@ -16,6 +16,7 @@ import com.asso.conference.webClient.models.UserModel;
 
 public class UserPageFragment extends Fragment {
 
+    AuthDBModel authDBModel;
     TextView userData;
 
     @Override
@@ -29,16 +30,23 @@ public class UserPageFragment extends Fragment {
 
         userData = (TextView) view.findViewById(R.id.userData);
 
+        if(userData != null){
+            userData.setText(""+authDBModel.username);
+            userData.append("\n"+authDBModel.firstName);
+            userData.append("\n"+authDBModel.lastName);
+        }
+
+
         return view;
     }
 
     // This is the method the pager adapter will use
     // to create a new fragment
-    public static Fragment newInstance(Wrapper<Consumer<UserModel>> userModelConsumer){
+    public static Fragment newInstance(){
         UserPageFragment f=new UserPageFragment();
 
         if(AuthDBModel.exists()) {
-            AuthDBModel authDBModel = AuthDBModel.getFirst();
+            f.authDBModel = AuthDBModel.getFirst();
 //            f.userData.setText(""+authDBModel.username);
 //            f.userData.append("\n"+authDBModel.firstName);
 //            f.userData.append("\n"+authDBModel.lastName);

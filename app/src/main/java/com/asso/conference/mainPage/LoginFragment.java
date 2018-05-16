@@ -1,5 +1,7 @@
 package com.asso.conference.mainPage;
 
+import android.app.Notification;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -13,10 +15,13 @@ import android.widget.TextView;
 
 import com.asso.conference.HomeActivity;
 import com.asso.conference.R;
+import com.asso.conference.SignUpActivity;
 import com.asso.conference.db.AuthDBModel;
 import com.asso.conference.webClient.BookmarkCallback;
 import com.asso.conference.webClient.UserService;
 import com.asso.conference.webClient.models.AuthModel;
+
+import br.com.goncalves.pugnotification.notification.PugNotification;
 
 public class LoginFragment extends Fragment {
 
@@ -56,6 +61,11 @@ public class LoginFragment extends Fragment {
         Button signInButton = (Button) view.findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener((e)->attemptLogin());
 
+        Button signUpButton = (Button) view.findViewById(R.id.sign_up_button);
+        signUpButton.setOnClickListener(e->{
+            Intent intent = new Intent(getContext(), SignUpActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void attemptLogin(){
