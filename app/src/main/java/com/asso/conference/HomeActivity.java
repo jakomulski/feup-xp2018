@@ -3,6 +3,7 @@ package com.asso.conference;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
@@ -188,9 +189,22 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
             case R.id.microbit:
-                Toast.makeText(this, "clicked", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                startActivity(intent);
+                // By clicking the microbit button in the upper right corner it opens the microbit app
+                // to flash the microbit device or in case the user doesn't have it installed it
+                // redirects to the play store.
+                Intent intent = getPackageManager().getLaunchIntentForPackage("com.samsung.microbit");
+                if (intent != null) {
+                    // We found the activity now start the activity
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else {
+                    // We didn't find the activity and bring user to the market and let them download the app
+                    intent = new Intent(Intent.ACTION_VIEW);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setData(Uri.parse("market://details?id=" + "com.samsung.microbit"));
+                    startActivity(intent);
+                }
+                Toast.makeText(this, "Use it to flash your microbit and have fun!", Toast.LENGTH_LONG).show();
                 break;
         }
         return super.onOptionsItemSelected(item);

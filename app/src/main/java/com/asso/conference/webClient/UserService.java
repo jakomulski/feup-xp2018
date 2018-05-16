@@ -1,5 +1,6 @@
 package com.asso.conference.webClient;
 
+import com.asso.conference.BuildConfig;
 import com.asso.conference.db.AuthDBModel;
 import com.asso.conference.webClient.models.AuthModel;
 import com.asso.conference.webClient.models.LoginDataModel;
@@ -67,7 +68,7 @@ public enum UserService {
 
     private void createClient(){
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://n42k.ddns.net:8899/api/")
+                .baseUrl(BuildConfig.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         retrofit.create(WebClientService.class);

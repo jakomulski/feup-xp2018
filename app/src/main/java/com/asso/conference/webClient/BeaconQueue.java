@@ -20,7 +20,7 @@ public enum BeaconQueue  {
     ObjectQueue<BeaconModel> queue;
 
     BeaconQueue(){
-        File file = new File(Environment.getExternalStorageDirectory() + File.separator + "baconQueue.dat");
+        File file = new File(Environment.getExternalStorageDirectory() + File.separator + "beaconQueue.dat");
         try {
             QueueFile queueFile = new QueueFile.Builder(file).build();
             ObjectQueue.Converter<BeaconModel> converter = new MoshiConverter<>(new Moshi.Builder().build(), BeaconModel.class);

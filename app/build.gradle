@@ -15,7 +15,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', 'BASE_URL', '"http://prod.example.com"'
         }
+        debug {
+            buildConfigField 'String', 'BASE_URL', '"http://n42k.ddns.net:8899/api/"'
+        }
+
     }
     compileOptions {
         targetCompatibility 1.8
