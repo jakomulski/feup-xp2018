@@ -27,7 +27,6 @@ import com.asso.conference.mainPage.BrowserFragment;
 import com.asso.conference.mainPage.HomePageFragment;
 import com.asso.conference.mainPage.LoginFragment;
 import com.asso.conference.mainPage.UserPageFragment;
-import com.asso.conference.ui.MainActivity;
 import com.asso.conference.webClient.BeaconQueue;
 import com.asso.conference.webClient.BookmarkCallback;
 import com.asso.conference.webClient.UserService;
