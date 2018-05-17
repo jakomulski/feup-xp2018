@@ -5,9 +5,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.asso.conference.HomeActivity;
 import com.asso.conference.R;
 import com.asso.conference.common.Consumer;
 import com.asso.conference.common.Wrapper;
@@ -18,6 +20,7 @@ public class UserPageFragment extends Fragment {
 
     AuthDBModel authDBModel;
     TextView userData;
+    Button logOutButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -29,6 +32,15 @@ public class UserPageFragment extends Fragment {
                 false);
 
         userData = (TextView) view.findViewById(R.id.userData);
+        logOutButton = (Button) view.findViewById(R.id.log_out_button);
+
+        logOutButton.setOnClickListener(e->{
+            AuthDBModel authDBModel = AuthDBModel.getFirst();
+            authDBModel.key = "";
+            authDBModel.save();
+            HomeActivity.class.cast(getActivity()).finish();
+            HomeActivity.class.cast(getActivity()).startActivity(HomeActivity.class.cast(getActivity()).getIntent());
+        });
 
         if(userData != null){
             userData.setText(""+authDBModel.username);

@@ -16,11 +16,19 @@
         android:id="@+id/textView" />
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text="User3"
         android:layout_gravity="center_horizontal"
         android:textSize="18sp"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         android:id="@+id/userData"/>
+
+    <Button
+        android:id="@+id/log_out_button"
+        style="?android:textAppearanceSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Log out"
+        android:textStyle="bold" />
 </LinearLayout>

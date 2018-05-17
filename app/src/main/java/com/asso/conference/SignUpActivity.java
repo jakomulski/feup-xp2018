@@ -89,9 +89,20 @@ public class SignUpActivity extends AppCompatActivity {
     private void attemptSignUp(){
         String username = usernameView.getText().toString();
         String password = passwordView.getText().toString();
+        String rPassword = repeatPasswordView.getText().toString();
         String firstname = firstName.getText().toString();
         String lastname = lastName.getText().toString();
 
+        boolean correntLength = username.length() > 3 && password.length() > 3 && rPassword.length() > 3 && firstname.length() > 3 && lastname.length() > 3;
+
+        if(!correntLength){
+            createPopUp("Invalid", "Value should have more than three characters");
+            return;
+        }
+        if(!password.equals(rPassword)){
+            createPopUp("Invalid", "Passwords aren't the same");
+            return;
+        }
 
         showProgress(true);
         UserModel user = new UserModel();
@@ -106,12 +117,10 @@ public class SignUpActivity extends AppCompatActivity {
                 if(value == null)
                     return;
 
-                signUpButton.setOnClickListener(e->{
-                    Intent intent = new Intent(getBaseContext(), HomeActivity.class);
-                    startActivity(intent);
-                });
-
                 showProgress(false);
+                Intent intent = new Intent(getBaseContext(), HomeActivity.class);
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(intent);
             }
 
 
