@@ -51,11 +51,10 @@ public class UserPageFragment extends Fragment {
     }
 
     private void attemptLogout(){
-        AuthDBModel authDBModel = AuthDBModel.getFirst();
-        authDBModel.key = "";
-        authDBModel.save();
-        HomeActivity.class.cast(getActivity()).finish();
-        HomeActivity.class.cast(getActivity()).startActivity(HomeActivity.class.cast(getActivity()).getIntent());
+        if(AuthDBModel.exists())
+            AuthDBModel.drop();
+
+        HomeActivity.class.cast(getActivity()).goToFirstPage();
     }
 
     public static Fragment newInstance(){

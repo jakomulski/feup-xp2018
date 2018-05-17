@@ -38,8 +38,8 @@ public enum UserService {
         service = retrofit.create(WebClientService.class);
     }
 
-    public boolean isAuthenticated(BookmarkCallback<UserModel> callback){
 
+    public boolean isAuthenticated(BookmarkCallback<UserModel> callback){
         if(AuthDBModel.exists()){
             AuthDBModel authDBModel = AuthDBModel.getFirst();
             final Call<ResponseModel<UserModel>> call = service.getUser(authDBModel.userId);

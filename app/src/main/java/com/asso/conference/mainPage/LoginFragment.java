@@ -128,7 +128,6 @@ public class LoginFragment extends Fragment {
                     authDBModel.save();
                 }
                 UserService.INSTANCE.createAuthenticatedClient(value.token);
-                HomeActivity.loggedIn = true;
                 HomeActivity.class.cast(getActivity()).finish();
                 HomeActivity.class.cast(getActivity()).startActivity(HomeActivity.class.cast(getActivity()).getIntent());
                 showProgress(false);

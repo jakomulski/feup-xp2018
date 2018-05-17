@@ -56,8 +56,6 @@ public class HomeActivity extends AppCompatActivity {
     private TextView mTextMessage;
     Toolbar toolbar;
 
-    public static boolean loggedIn = true;
-
     protected ServiceConnection serviceConnection;
     private BluetoothService service;
     private Disposable disposable;
@@ -88,14 +86,22 @@ public class HomeActivity extends AppCompatActivity {
             return false;
         }
     };
+
     private ViewPager viewPager;
     private BottomNavigationView navigation;
+
+    public void goToFirstPage(){
+        if(viewPager != null)
+            viewPager.setCurrentItem(0, true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         //ActiveAndroid.initialize(this);
+
+
 
         Intent intent = new Intent(this, NotificationService.class);
         startService(intent);
@@ -178,7 +184,6 @@ public class HomeActivity extends AppCompatActivity {
             MenuItem prevMenuItem = null;
             public void onPageScrollStateChanged(int state) {}
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-
             public void onPageSelected(int position) {
                 // Check if this is the page you want.
 
@@ -214,35 +219,17 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public Fragment getItem(int position) {
 
-                Wrapper<Consumer<UserModel>> userModelConsumer = new Wrapper<>();
-
-
-
                 if(position == 1){
                     return BrowserFragment.newInstance("https://xp2018.sched.com/mobile/");
                 } else{
-
-
-                    if(loggedIn && UserService.INSTANCE.isAuthenticated(new BookmarkCallback<UserModel>() {
-                        @Override
-                        public void onSuccess(UserModel userModel) {
-                            //userModelConsumer.ifPresent(c->c.consume(userModel));
-                        }
-
-                        @Override
-                        public void onError(String message) {
-                            finish();
-                            startActivity(getIntent());
-                            loggedIn = false;
-                        }
-                    }))
-                    {
+                    if(AuthDBModel.exists()) {
+                        updateData(AuthDBModel.getFirst());
                         if(position == 0)
                             return HomePageFragment.newInstance();
                         else
                             return UserPageFragment.newInstance();
                     }
-
+                    updateData(null);
                     return LoginFragment.newInstance();
                 }
             }
@@ -251,7 +238,10 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void updateData(AuthDBModel authDBModel){
-        toolbar.setSubtitle("Welcome, "+ authDBModel.username);
+        if(authDBModel != null)
+            toolbar.setSubtitle("Welcome, "+ authDBModel.username);
+        else
+            toolbar.setSubtitle("Anonymous");
     }
 
     @Override
