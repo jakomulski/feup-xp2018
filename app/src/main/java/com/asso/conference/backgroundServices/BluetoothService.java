@@ -63,8 +63,8 @@ public class BluetoothService extends Service {
         super.onCreate();
 
         // TODO change hardcoded bluetooth devices
-        BluetoothDevice midi = new BluetoothDevice("C4:BE:84:49:DD:7E", 1, 1000, 0);
-        BluetoothDevice sensorTag = new BluetoothDevice("B0:B4:48:BC:E5:82", 2,1000, 0);
+        BluetoothDevice midi = new BluetoothDevice("C4:BE:84:49:DD:7E", 1, 1000, 0, 0.3f, 0.1f);
+        BluetoothDevice sensorTag = new BluetoothDevice("B0:B4:48:BC:E5:82", 2,1000, 0,0.5f,0.9f);
 
         devices.put("C4:BE:84:49:DD:7E", midi);
         devices.put("B0:B4:48:BC:E5:82", sensorTag);
@@ -119,7 +119,7 @@ public class BluetoothService extends Service {
             if(lastDevice != null) {
                 if(devicesObserver != null) {
                     lastDevice.setRssi(result.getRssi());
-                    lastDevice.setLastSignal(result.getTimestampNanos());
+                    lastDevice.setLastSignal(System.currentTimeMillis());
                     devices.put(result.getDevice().getAddress(), lastDevice);
                     devicesObserver.onNext(devices);
                 }

@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.asso.conference.HomeActivity;
@@ -25,7 +27,9 @@ import java.util.Map;
 public class HomePageFragment extends Fragment {
 
     TextView messageView;
-    ListView lv;
+    RelativeLayout devicesView;
+
+    long MILISECONDS_WITH_NO_RESPONSE = 5000;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -38,37 +42,61 @@ public class HomePageFragment extends Fragment {
 
 
         messageView = (TextView) view.findViewById(R.id.message);
-        lv = (ListView) view.findViewById(R.id.deviceList);
+        devicesView = (RelativeLayout) view.findViewById(R.id.devices);
         Button updateButton = (Button) view.findViewById(R.id.updateButton);
         updateButton.setOnClickListener(e->{
-            HashMap<String,BluetoothDevice> btDevices = ((HomeActivity)this.getContext()).bluetoothDevices;
-            String[] btArr = new String[btDevices.size()];
-            Iterator it = btDevices.entrySet().iterator();
-            int i = 0;
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
-                btArr[i] = pair.getKey() + " - " + ((BluetoothDevice)pair.getValue()).getRssi()+ " - " + ((BluetoothDevice)pair.getValue()).getLastSignal();
-                it.remove();
-                i++;
-            }
-            lv.setAdapter(new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1, btArr));
+            displayDevices();
         });
 
         // TODO keep list updated
-        // Convert ArrayList to array
-        HashMap<String,BluetoothDevice> btDevices = ((HomeActivity)this.getContext()).bluetoothDevices;
-        String[] btArr = new String[btDevices.size()];
-        Iterator it = btDevices.entrySet().iterator();
-        int i = 0;
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            btArr[i] = pair.getKey() + " = " + pair.getValue();
-            it.remove();
-            i++;
-        }
-        lv.setAdapter(new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1, btArr));
+        displayDevices();
 
         return view;
+    }
+
+    private void displayDevices() {
+
+        int nDevicesInView = devicesView.getChildCount() -1;
+        long currentTime = System.currentTimeMillis();
+        devicesView.removeViewsInLayout(1, nDevicesInView);
+        HashMap<String,BluetoothDevice> btDevices = ((HomeActivity)this.getContext()).bluetoothDevices;
+        Iterator it = btDevices.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            BluetoothDevice btDevice = ((BluetoothDevice)pair.getValue());
+            //ImageView to show if device is available or not
+            ImageView device = new ImageView(this.getContext());
+            // check whether the last signal is acceptable to show a green or grey dot
+            if( currentTime > btDevice.getLastSignal() + MILISECONDS_WITH_NO_RESPONSE || btDevice.getLastSignal() == 0){
+                device.setImageResource(android.R.drawable.presence_offline);
+            } else {
+                device.setImageResource(android.R.drawable.presence_online);
+            }
+
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.leftMargin = (int) (btDevice.getX() * devicesView.getWidth());
+            layoutParams.topMargin = (int) (btDevice.getY() * devicesView.getHeight());
+            devicesView.addView(device, layoutParams);
+
+            // TextView to show roomId of device
+            TextView roomId = new TextView(this.getContext());
+            roomId.setText(btDevice.getRoomId()+"");
+            RelativeLayout.LayoutParams roomIdLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+            roomIdLayoutParams.leftMargin = layoutParams.leftMargin + 13;
+            roomIdLayoutParams.topMargin = layoutParams.topMargin - 50;
+            devicesView.addView(roomId, roomIdLayoutParams);
+
+            // TextView to show rssi of device
+            TextView rssi = new TextView(this.getContext());
+            rssi.setText(btDevice.getRssi()+" (" + btDevice.getLastSignal() + ")");
+            RelativeLayout.LayoutParams rssiLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+            rssiLayoutParams.leftMargin = layoutParams.leftMargin + 13;
+            rssiLayoutParams.topMargin = layoutParams.topMargin + 50;
+            devicesView.addView(rssi, rssiLayoutParams);
+        }
     }
 
     public static Fragment newInstance(){

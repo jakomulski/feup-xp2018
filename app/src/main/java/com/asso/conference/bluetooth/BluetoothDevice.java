@@ -5,12 +5,16 @@ public class BluetoothDevice {
     private int roomId;
     private int rssi;
     private long lastSignal;
+    private float x;
+    private float y;
 
-    public BluetoothDevice(String address, int roomId, int rssi, long lastSignal){
+    public BluetoothDevice(String address, int roomId, int rssi, long lastSignal, float x, float y){
         this.address = address;
         this.roomId = roomId;
         this.rssi = rssi;
         this.lastSignal = lastSignal;
+        this.x = x;
+        this.y = y;
     }
 
     public String getAddress() {
@@ -37,4 +41,13 @@ public class BluetoothDevice {
         this.lastSignal = lastSignal;
     }
 
+
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
 }
