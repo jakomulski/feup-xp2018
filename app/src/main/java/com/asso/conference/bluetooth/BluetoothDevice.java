@@ -17,6 +17,10 @@ public class BluetoothDevice {
         return address;
     }
 
+    public int getRoomId() {
+        return roomId;
+    }
+
     public int getRssi() {
         return rssi;
     }

@@ -52,7 +52,7 @@ public class HomePageFragment extends Fragment {
 
         messageView = (TextView) view.findViewById(R.id.message);
         lv = (ListView) view.findViewById(R.id.deviceList);
-        /*Button updateButton = (Button) view.findViewById(R.id.updateButton);
+        Button updateButton = (Button) view.findViewById(R.id.updateButton);
         updateButton.setOnClickListener(e->{
             HashMap<String,BluetoothDevice> btDevices = ((HomeActivity)this.getContext()).bluetoothDevices;
             String[] btArr = new String[btDevices.size()];
@@ -60,12 +60,12 @@ public class HomePageFragment extends Fragment {
             int i = 0;
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry)it.next();
-                btArr[i] = pair.getKey() + " = " + pair.getValue();
+                btArr[i] = pair.getKey() + " - " + ((BluetoothDevice)pair.getValue()).getRssi()+ " - " + ((BluetoothDevice)pair.getValue()).getLastSignal();
                 it.remove();
                 i++;
             }
             lv.setAdapter(new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1, btArr));
-        });*/
+        });
 
         // TODO keep list updated
         // Convert ArrayList to array
