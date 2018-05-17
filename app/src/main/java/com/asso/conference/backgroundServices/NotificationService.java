@@ -1,4 +1,4 @@
-package com.asso.conference.webClient;
+package com.asso.conference.backgroundServices;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.asso.conference.HomeActivity;
 import com.asso.conference.R;
+import com.asso.conference.webClient.WebClientService;
 import com.asso.conference.webClient.models.AuthModel;
 import com.asso.conference.webClient.models.LoginDataModel;
 import com.asso.conference.webClient.models.ResponseModel;

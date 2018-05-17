@@ -1,30 +1,18 @@
 package com.asso.conference.mainPage;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.asso.conference.HomeActivity;
 import com.asso.conference.R;
-import com.asso.conference.SignUpActivity;
 import com.asso.conference.bluetooth.BluetoothDevice;
-import com.asso.conference.webClient.BluetoothService;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,7 +21,6 @@ import java.util.Map;
 //import io.reactivex.android.schedulers.AndroidSchedulers;
 //import io.reactivex.disposables.Disposable;
 
-import static android.content.Context.BIND_AUTO_CREATE;
 
 public class HomePageFragment extends Fragment {
 

@@ -1,4 +1,4 @@
-package com.asso.conference.webClient;
+package com.asso.conference.backgroundServices;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;

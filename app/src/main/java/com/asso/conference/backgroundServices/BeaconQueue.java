@@ -1,7 +1,6 @@
-package com.asso.conference.webClient;
+package com.asso.conference.backgroundServices;
 
 import android.os.Environment;
-import android.util.Log;
 
 import com.asso.conference.webClient.models.BeaconModel;
 import com.squareup.moshi.Moshi;
@@ -10,10 +9,6 @@ import com.squareup.tape2.QueueFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.PriorityQueue;
-import java.util.Queue;
-
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public enum BeaconQueue  {
     INSTANCE;

@@ -27,7 +27,7 @@
         <meta-data android:name="AA_DB_VERSION" android:value="20" />
         <meta-data android:name="AA_MODELS" android:value="com.asso.conference.db.AuthDBModel, com.asso.conference.db.UserDBModel" />
 
-        <receiver android:name=".webClient.NetworkChangeReceiver" >
+        <receiver android:name=".backgroundServices.NetworkChangeReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -51,11 +51,11 @@
             android:screenOrientation="portrait" />
 
         <service
-            android:name=".webClient.NotificationService"
+            android:name=".backgroundServices.NotificationService"
             android:exported="false"/>
 
         <service
-            android:name=".webClient.BluetoothService"
+            android:name=".backgroundServices.BluetoothService"
             android:exported="false"/>
 
     </application>

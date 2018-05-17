@@ -1,7 +1,6 @@
 package com.asso.conference;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -9,7 +8,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -33,18 +31,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.asso.conference.bluetooth.BluetoothDevice;
-import com.asso.conference.common.Consumer;
-import com.asso.conference.common.Wrapper;
 import com.asso.conference.db.AuthDBModel;
 import com.asso.conference.mainPage.BrowserFragment;
 import com.asso.conference.mainPage.HomePageFragment;
 import com.asso.conference.mainPage.LoginFragment;
 import com.asso.conference.mainPage.UserPageFragment;
-import com.asso.conference.webClient.BluetoothService;
-import com.asso.conference.webClient.BookmarkCallback;
-import com.asso.conference.webClient.NotificationService;
-import com.asso.conference.webClient.UserService;
-import com.asso.conference.webClient.models.UserModel;
+import com.asso.conference.backgroundServices.BluetoothService;
+import com.asso.conference.backgroundServices.NotificationService;
 
 import java.util.HashMap;
 

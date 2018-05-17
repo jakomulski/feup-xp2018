@@ -1,4 +1,4 @@
-package com.asso.conference.webClient;
+package com.asso.conference.backgroundServices;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
