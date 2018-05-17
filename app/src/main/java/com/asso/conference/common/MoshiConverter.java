@@ -1,4 +1,4 @@
-package com.asso.conference.backgroundServices;
+package com.asso.conference.common;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -11,7 +11,7 @@ import okio.Buffer;
 import okio.BufferedSink;
 import okio.Okio;
 
-class MoshiConverter<T> implements ObjectQueue.Converter<T> {
+public class MoshiConverter<T> implements ObjectQueue.Converter<T> {
     private final JsonAdapter<T> jsonAdapter;
 
     public MoshiConverter(Moshi moshi, Class<T> type) {

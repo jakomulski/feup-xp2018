@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.util.Log;
 
+import com.asso.conference.db.BeaconQueue;
+
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
     BeaconQueue queue = BeaconQueue.INSTANCE;

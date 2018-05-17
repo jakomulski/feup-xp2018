@@ -20,8 +20,9 @@ public class BeaconQueuePopService extends IntentService{
 
     private boolean isSending = false;
 
-    public BeaconQueuePopService(String name) {
-        super(name);
+
+    public BeaconQueuePopService() {
+        super("Collector");
     }
 
     @Override
@@ -29,7 +30,7 @@ public class BeaconQueuePopService extends IntentService{
         while(true) {
             try {
                 Thread.sleep(10000);
-                if (isNetworkAvailable()&& isSending == false) {
+                if (isNetworkAvailable()&& isSending == false && !beaconQueue.isEmpty()) {
                     isSending = true;
                     try {
                         userService.sendBeacon(beaconQueue.peek(), new BookmarkCallback<String>() {

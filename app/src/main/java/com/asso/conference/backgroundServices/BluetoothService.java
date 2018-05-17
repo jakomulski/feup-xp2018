@@ -16,6 +16,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.asso.conference.bluetooth.BluetoothDevice;
+import com.asso.conference.db.BeaconQueue;
 
 import java.util.HashMap;
 

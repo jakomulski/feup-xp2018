@@ -3,6 +3,7 @@ package com.asso.conference.webClient;
 import com.asso.conference.BuildConfig;
 import com.asso.conference.db.AuthDBModel;
 import com.asso.conference.webClient.models.AuthModel;
+import com.asso.conference.webClient.models.BeaconModel;
 import com.asso.conference.webClient.models.LoginDataModel;
 import com.asso.conference.webClient.models.ResponseModel;
 import com.asso.conference.webClient.models.UserModel;
@@ -27,6 +28,8 @@ public enum UserService {
 
     WebClientService service;
 
+
+
     UserService(){
         if(AuthDBModel.exists()){
             AuthDBModel authDBModel = AuthDBModel.getFirst();
@@ -36,6 +39,31 @@ public enum UserService {
             createClient();
 
         service = retrofit.create(WebClientService.class);
+    }
+
+    public void sendBeacon(BeaconModel beaconModel, final BookmarkCallback<String> callback){
+        Call<ResponseModel<String>> call = service.sendBeacon(beaconModel);
+        call.enqueue(new Callback<ResponseModel<String>>() {
+            @Override
+            public void onResponse(Call<ResponseModel<String>> call, Response<ResponseModel<String>> response) {
+                if(response.isSuccessful())
+                    callback.onSuccess(response.body().success);
+                else{
+                    try {
+                        ResponseModel r = new GsonBuilder().create().fromJson(response.errorBody().string(), ResponseModel.class);
+                        callback.onError(r.failure);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseModel<String>> call, Throwable t) {
+                callback.onError(t.getMessage());
+            }
+        });
     }
 
 
