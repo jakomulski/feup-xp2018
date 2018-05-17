@@ -92,7 +92,7 @@ public enum UserService {
                 })
                 .build();
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://n42k.ddns.net:8899/api/")
+                .baseUrl(BuildConfig.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient)
                 .build();

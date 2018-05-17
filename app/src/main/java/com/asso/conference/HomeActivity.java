@@ -1,11 +1,20 @@
 package com.asso.conference;
 
-import android.app.Notification;
+import android.Manifest;
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -14,12 +23,14 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.asso.conference.bluetooth.BluetoothDevice;
 import com.asso.conference.common.Consumer;
 import com.asso.conference.common.Wrapper;
 import com.asso.conference.db.AuthDBModel;
@@ -27,20 +38,31 @@ import com.asso.conference.mainPage.BrowserFragment;
 import com.asso.conference.mainPage.HomePageFragment;
 import com.asso.conference.mainPage.LoginFragment;
 import com.asso.conference.mainPage.UserPageFragment;
-import com.asso.conference.webClient.BeaconQueue;
+import com.asso.conference.webClient.BluetoothService;
 import com.asso.conference.webClient.BookmarkCallback;
+import com.asso.conference.webClient.NotificationService;
 import com.asso.conference.webClient.UserService;
-import com.asso.conference.webClient.models.BeaconModel;
 import com.asso.conference.webClient.models.UserModel;
 
-import br.com.goncalves.pugnotification.notification.PugNotification;
+import java.util.HashMap;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 
 public class HomeActivity extends AppCompatActivity {
     private TextView mTextMessage;
     Toolbar toolbar;
 
-    public  static boolean loggedIn = true;
+    public static boolean loggedIn = true;
+
+    protected ServiceConnection serviceConnection;
+    private BluetoothService service;
+    private Disposable disposable;
+    private final static int REQUEST_ENABLE_BT = 1;
+    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+    public HashMap<String, BluetoothDevice> bluetoothDevices = new HashMap<String, BluetoothDevice>();
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -70,10 +92,55 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
-
         super.onCreate(savedInstanceState);
         //ActiveAndroid.initialize(this);
+
+        Intent intent = new Intent(this, NotificationService.class);
+        startService(intent);
+
+        BluetoothManager btManager = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothAdapter btAdapter = btManager.getAdapter();
+
+        if (btAdapter != null && !btAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent,REQUEST_ENABLE_BT);
+        }
+        // Make sure we have access coarse location enabled, if not, prompt the user to enable it
+        if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("This app needs location access");
+            builder.setMessage("Please grant location access so this app can detect peripherals.");
+            builder.setPositiveButton(android.R.string.ok, null);
+            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+                }
+            });
+            builder.show();
+        }
+        Intent intent2 = new Intent(this, BluetoothService.class);
+        startService(intent2);
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                Log.d("Homepage","BlueMAX service bound");
+                service = ((BluetoothService.LocalBinder)iBinder).getService();
+                disposable = service.observeDevices()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(devices -> {
+                            toolbar.setSubtitle(devices.get("C4:BE:84:49:DD:7E").getRssi()+"");
+                            bluetoothDevices = devices;
+                        });
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                Log.d("Homepage","Service disconnected");
+            }
+        };
+        bindService(new Intent( this, BluetoothService.class), serviceConnection, BIND_AUTO_CREATE);
+
 
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
@@ -207,6 +274,40 @@ public class HomeActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(disposable != null)
+            disposable.dispose();
+        unbindService(serviceConnection);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_COARSE_LOCATION: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    System.out.println("coarse location permission granted");
+                } else {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Functionality limited");
+                    builder.setMessage("Since location access has not been granted, this app will not be able to discover beacons when in the background.");
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                        }
+
+                    });
+                    builder.show();
+                }
+                return;
+            }
+        }
     }
 
 }

@@ -14,6 +14,9 @@ import com.asso.conference.R;
 import com.asso.conference.common.Consumer;
 import com.asso.conference.common.Wrapper;
 import com.asso.conference.db.AuthDBModel;
+import com.asso.conference.webClient.BookmarkCallback;
+import com.asso.conference.webClient.UserService;
+import com.asso.conference.webClient.models.AuthModel;
 import com.asso.conference.webClient.models.UserModel;
 
 public class UserPageFragment extends Fragment {
@@ -49,7 +52,17 @@ public class UserPageFragment extends Fragment {
         }
 
 
+        Button logoutButton = (Button) view.findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener((e)->attemptLogout());
+
+
         return view;
+    }
+
+    private void attemptLogout(){
+        if(AuthDBModel.exists()){
+            AuthDBModel.drop();
+        }
     }
 
     // This is the method the pager adapter will use
