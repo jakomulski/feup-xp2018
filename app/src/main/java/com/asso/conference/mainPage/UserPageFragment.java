@@ -23,7 +23,6 @@ public class UserPageFragment extends Fragment {
 
     AuthDBModel authDBModel;
     TextView userData;
-    Button logOutButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -35,15 +34,7 @@ public class UserPageFragment extends Fragment {
                 false);
 
         userData = (TextView) view.findViewById(R.id.userData);
-        logOutButton = (Button) view.findViewById(R.id.log_out_button);
 
-        logOutButton.setOnClickListener(e->{
-            AuthDBModel authDBModel = AuthDBModel.getFirst();
-            authDBModel.key = "";
-            authDBModel.save();
-            HomeActivity.class.cast(getActivity()).finish();
-            HomeActivity.class.cast(getActivity()).startActivity(HomeActivity.class.cast(getActivity()).getIntent());
-        });
 
         if(userData != null){
             userData.setText(""+authDBModel.username);
@@ -60,30 +51,20 @@ public class UserPageFragment extends Fragment {
     }
 
     private void attemptLogout(){
-        if(AuthDBModel.exists()){
-            AuthDBModel.drop();
-        }
+        AuthDBModel authDBModel = AuthDBModel.getFirst();
+        authDBModel.key = "";
+        authDBModel.save();
+        HomeActivity.class.cast(getActivity()).finish();
+        HomeActivity.class.cast(getActivity()).startActivity(HomeActivity.class.cast(getActivity()).getIntent());
     }
 
-    // This is the method the pager adapter will use
-    // to create a new fragment
     public static Fragment newInstance(){
         UserPageFragment f=new UserPageFragment();
 
         if(AuthDBModel.exists()) {
             f.authDBModel = AuthDBModel.getFirst();
-//            f.userData.setText(""+authDBModel.username);
-//            f.userData.append("\n"+authDBModel.firstName);
-//            f.userData.append("\n"+authDBModel.lastName);
         }
 
-
-//        userModelConsumer.setValue(userModel->{
-//            f.userData.setText(userModel.username);
-//            f.userData.append("\n"+userModel.firstName);
-//            f.userData.append("\n"+userModel.lastName);
-//        });
         return f;
     }
-
 }

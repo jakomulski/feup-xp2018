@@ -30,8 +30,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+//import io.reactivex.android.schedulers.AndroidSchedulers;
+//import io.reactivex.disposables.Disposable;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 
