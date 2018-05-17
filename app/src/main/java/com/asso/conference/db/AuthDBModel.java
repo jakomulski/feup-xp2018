@@ -5,6 +5,9 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.activeandroid.query.Update;
+import com.activeandroid.query.Delete;
+
+import java.util.List;
 
 @Table(name = "Auth")
 public class AuthDBModel extends Model {
@@ -40,5 +43,9 @@ public class AuthDBModel extends Model {
 
     public static void updateToken(String token) {
         new Update(AuthDBModel.class).set("Key = ?",token).execute();
+    }
+
+    public static List<Model> drop() {
+        return new Delete().from(AuthDBModel.class).execute();
     }
 }

@@ -43,7 +43,7 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name">w
+            android:label="@string/app_name">
         </activity>
         <activity
             android:name=".SignUpActivity"
@@ -51,12 +51,12 @@
             android:screenOrientation="portrait" />
 
         <service
-            android:name=".bluetooth.BleAdapterService"
-            android:enabled="true" />
-        <service
-            android:name=".bluetooth.HrmAdapterService"
-            android:enabled="true" />
+            android:name=".webClient.NotificationService"
+            android:exported="false"/>
 
+        <service
+            android:name=".webClient.BluetoothService"
+            android:exported="false"/>
 
     </application>
 
