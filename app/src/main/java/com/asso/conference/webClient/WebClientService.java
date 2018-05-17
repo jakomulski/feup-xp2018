@@ -13,7 +13,7 @@ import retrofit2.http.Path;
 
 public interface WebClientService {
     @POST("register")
-    Call<UserModel> createUser(@Body UserModel user);
+    Call<ResponseModel<AuthModel>> createUser(@Body UserModel user);
 
     //@FormUrlEncoded
     @POST("login")

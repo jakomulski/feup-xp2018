@@ -1,7 +1,13 @@
 package com.asso.conference.mainPage;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.Notification;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -11,6 +17,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.asso.conference.HomeActivity;
@@ -27,8 +35,12 @@ public class LoginFragment extends Fragment {
 
     private EditText usernameView;
     private EditText passwordView;
+    private LinearLayout layout;
+    private ProgressBar progressBar;
 
     public UserService userService = UserService.INSTANCE;
+    private Button  signInButton;
+    private Button signUpButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -44,7 +56,27 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
+
+    private void showProgress(final boolean show) {
+        if(show){
+            layout.setAlpha(0.4f);
+            progressBar.setVisibility(View.VISIBLE);
+            signInButton.setClickable(false);
+            signUpButton.setClickable(false);
+        }
+        else{
+            layout.setAlpha(1f);
+            progressBar.setVisibility(View.GONE);
+            signInButton.setClickable(true);
+            signUpButton.setClickable(true);
+        }
+    }
+
+
+
     private void createView(View view){
+        layout = (LinearLayout) view.findViewById(R.id.layout);
+        progressBar = (ProgressBar) view.findViewById(R.id.login_progress);
         usernameView = (EditText) view.findViewById(R.id.username);
         passwordView = (EditText) view.findViewById(R.id.password);
         passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -58,10 +90,10 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        Button signInButton = (Button) view.findViewById(R.id.sign_in_button);
+        signInButton = (Button) view.findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener((e)->attemptLogin());
 
-        Button signUpButton = (Button) view.findViewById(R.id.sign_up_button);
+        signUpButton = (Button) view.findViewById(R.id.sign_up_button);
         signUpButton.setOnClickListener(e->{
             Intent intent = new Intent(getContext(), SignUpActivity.class);
             startActivity(intent);
@@ -71,7 +103,7 @@ public class LoginFragment extends Fragment {
     private void attemptLogin(){
         String username = usernameView.getText().toString();
         String password = passwordView.getText().toString();
-
+        showProgress(true);
         userService.logIn(username, password, new BookmarkCallback<AuthModel>() {
             @Override
             public void onSuccess(AuthModel value) {
@@ -99,21 +131,38 @@ public class LoginFragment extends Fragment {
                 HomeActivity.loggedIn = true;
                 HomeActivity.class.cast(getActivity()).finish();
                 HomeActivity.class.cast(getActivity()).startActivity(HomeActivity.class.cast(getActivity()).getIntent());
+                showProgress(false);
             }
 
 
             @Override
-            public void onError() {
-
+            public void onError(String message) {
+                createPopUp("Failure", message);
+                showProgress(false);
             }
         });
     }
+
 
     // This is the method the pager adapter will use
     // to create a new fragment
     public static Fragment newInstance(){
         LoginFragment f=new LoginFragment();
         return f;
+    }
+
+    private void createPopUp(String title, String text){
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(text);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+
     }
 
 }

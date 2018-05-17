@@ -154,7 +154,7 @@ public class HomeActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onError() {
+                        public void onError(String message) {
                             finish();
                             startActivity(getIntent());
                             loggedIn = false;

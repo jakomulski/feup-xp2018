@@ -6,6 +6,8 @@ import com.asso.conference.webClient.models.AuthModel;
 import com.asso.conference.webClient.models.LoginDataModel;
 import com.asso.conference.webClient.models.ResponseModel;
 import com.asso.conference.webClient.models.UserModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 
@@ -46,13 +48,14 @@ public enum UserService {
                 public void onResponse(Call<ResponseModel<UserModel>> call, Response<ResponseModel<UserModel>> response) {
                     if(response.isSuccessful())
                         callback.onSuccess(response.body().success);
-                    else
-                        callback.onError();
+                    else {
+                        callback.onError(response.errorBody().toString());
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseModel<UserModel>> call, Throwable t) {
-
+                    callback.onError(t.getMessage());
                 }
             });
             return true;
@@ -97,6 +100,30 @@ public enum UserService {
         service = retrofit.create(WebClientService.class);
     }
 
+    public void signUp(UserModel user, final BookmarkCallback<AuthModel> callback) {
+        Call<ResponseModel<AuthModel>> call = service.createUser(user);
+        call.enqueue(new Callback<ResponseModel<AuthModel>>() {
+            @Override
+            public void onResponse(Call<ResponseModel<AuthModel>> call, Response<ResponseModel<AuthModel>> response) {
+                if (response.isSuccessful())
+                    callback.onSuccess(response.body().success);
+                else{
+                    try {
+                        ResponseModel r = new GsonBuilder().create().fromJson(response.errorBody().string(), ResponseModel.class);
+                        callback.onError(r.failure);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseModel<AuthModel>> call, Throwable t) {
+                callback.onError(t.getMessage());
+            }
+        });
+    }
+
     public void logIn(String username, String password, final BookmarkCallback<AuthModel> callback){
         Call<ResponseModel<AuthModel>> call = service.logIn(new LoginDataModel(username, password));
         call.enqueue(new Callback<ResponseModel<AuthModel>>() {
@@ -104,13 +131,20 @@ public enum UserService {
             public void onResponse(Call<ResponseModel<AuthModel>> call, Response<ResponseModel<AuthModel>> response) {
                 if(response.isSuccessful())
                     callback.onSuccess(response.body().success);
-                else
-                    callback.onError();
+                else{
+                    try {
+                        ResponseModel r = new GsonBuilder().create().fromJson(response.errorBody().string(), ResponseModel.class);
+                        callback.onError(r.failure);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
 
             @Override
             public void onFailure(Call<ResponseModel<AuthModel>> call, Throwable t) {
-                callback.onError();
+                callback.onError(t.getMessage());
             }
         });
     }
