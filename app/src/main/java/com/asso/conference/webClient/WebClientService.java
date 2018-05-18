@@ -2,6 +2,8 @@ package com.asso.conference.webClient;
 
 import com.asso.conference.webClient.models.AuthModel;
 import com.asso.conference.webClient.models.BeaconModel;
+import com.asso.conference.webClient.models.BluetoothDeviceModel;
+import com.asso.conference.webClient.models.EventModel;
 import com.asso.conference.webClient.models.LoginDataModel;
 import com.asso.conference.webClient.models.ResponseModel;
 import com.asso.conference.webClient.models.UserModel;
@@ -24,6 +26,13 @@ public interface WebClientService {
 
     @POST("event/beacon")
     Call<ResponseModel<String>> sendBeacon(@Body BeaconModel beaconModel);
+
+    @GET("bluetoothDevices")
+    Call<ResponseModel<BluetoothDeviceModel[]>> getBluetoothDevices();
+
+    @GET("nextEvent")
+    Call<ResponseModel<EventModel>> getNextEvent();
+
 
 
 }

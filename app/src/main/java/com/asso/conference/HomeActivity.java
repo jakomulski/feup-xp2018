@@ -30,6 +30,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.asso.conference.backgroundServices.BeaconQueuePopService;
+import com.asso.conference.backgroundServices.BeaconQueuePushService;
 import com.asso.conference.bluetooth.BluetoothDevice;
 import com.asso.conference.db.AuthDBModel;
 import com.asso.conference.mainPage.BrowserFragment;
@@ -96,8 +98,9 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-        Intent intent = new Intent(this, NotificationService.class);
-        startService(intent);
+        // Start notifications service
+        Intent notificationIntent = new Intent(this, NotificationService.class);
+        startService(notificationIntent);
 
         BluetoothManager btManager = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter btAdapter = btManager.getAdapter();
@@ -126,9 +129,9 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
 
-
-        Intent intent2 = new Intent(this, BluetoothService.class);
-        startService(intent2);
+        // Start bluetooth service
+        Intent bluetoothIntent = new Intent(this, BluetoothService.class);
+        startService(bluetoothIntent);
         serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -137,7 +140,7 @@ public class HomeActivity extends AppCompatActivity {
                 disposable = service.observeDevices()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(devices -> {
-                            toolbar.setSubtitle(devices.get("C4:BE:84:49:DD:7E").getRssi()+"");
+                            //toolbar.setSubtitle(devices.get("C4:BE:84:49:DD:7E").getRssi()+"");
                             bluetoothDevices = devices;
                         });
             }
@@ -148,6 +151,14 @@ public class HomeActivity extends AppCompatActivity {
             }
         };
         bindService(new Intent( this, BluetoothService.class), serviceConnection, BIND_AUTO_CREATE);
+
+        // Start queue pop requests service
+        Intent BeaconQueuePopIntent = new Intent(this, BeaconQueuePopService.class);
+        startService(BeaconQueuePopIntent);
+
+        // Start queue push requests service
+        Intent BeaconQueuePushIntent = new Intent(this, BeaconQueuePushService.class);
+        startService(BeaconQueuePushIntent);
 
 
         if (android.os.Build.VERSION.SDK_INT > 9)

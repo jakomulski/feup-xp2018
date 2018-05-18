@@ -1,9 +1,12 @@
 package com.asso.conference.webClient;
 
 import com.asso.conference.BuildConfig;
+import com.asso.conference.bluetooth.BluetoothDevice;
 import com.asso.conference.db.AuthDBModel;
 import com.asso.conference.webClient.models.AuthModel;
 import com.asso.conference.webClient.models.BeaconModel;
+import com.asso.conference.webClient.models.BluetoothDeviceModel;
+import com.asso.conference.webClient.models.EventModel;
 import com.asso.conference.webClient.models.LoginDataModel;
 import com.asso.conference.webClient.models.ResponseModel;
 import com.asso.conference.webClient.models.UserModel;
@@ -27,8 +30,6 @@ public enum UserService {
     Retrofit retrofit = null;
 
     WebClientService service;
-
-
 
     UserService(){
         if(AuthDBModel.exists()){
@@ -62,6 +63,71 @@ public enum UserService {
             @Override
             public void onFailure(Call<ResponseModel<String>> call, Throwable t) {
                 callback.onError(t.getMessage());
+            }
+        });
+    }
+
+    public void getBluetoothDevices(final BookmarkCallback<BluetoothDeviceModel[]> callback){
+
+        BluetoothDeviceModel midi = new BluetoothDeviceModel("C4:BE:84:49:DD:7E", 1, 0.3f, 0.1f);
+        BluetoothDeviceModel sensorTag = new BluetoothDeviceModel("B0:B4:48:BC:E5:82", 2,0.5f,0.9f);
+        BluetoothDeviceModel bt100 = new BluetoothDeviceModel("A0:E9:DB:08:49:C2", 3,0.9f,0.5f);
+
+        BluetoothDeviceModel[] bts = new BluetoothDeviceModel[] {midi, sensorTag, bt100};
+        Call<ResponseModel<BluetoothDeviceModel[]>> call = service.getBluetoothDevices();
+        call.enqueue(new Callback<ResponseModel<BluetoothDeviceModel[]>>() {
+            @Override
+            public void onResponse(Call<ResponseModel<BluetoothDeviceModel[]>> call, Response<ResponseModel<BluetoothDeviceModel[]>> response) {
+
+                callback.onSuccess(bts); // TODO REMOVE HARDCODED
+                /*if(response.isSuccessful())
+                    callback.onSuccess(response.body().success);
+                else{
+                    try {
+                        ResponseModel r = new GsonBuilder().create().fromJson(response.errorBody().string(), ResponseModel.class);
+                        callback.onError(r.failure);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }*/
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseModel<BluetoothDeviceModel[]>> call, Throwable t) {
+                //callback.onError(t.getMessage());
+                callback.onSuccess(bts); // TODO REMOVE HARDCODED
+            }
+        });
+    }
+
+    public void getNextEvent(final BookmarkCallback<EventModel> callback){
+
+        EventModel nextEvent = new EventModel("Coffee Break", "Time for networking", 10);
+
+        Call<ResponseModel<EventModel>> call = service.getNextEvent();
+        call.enqueue(new Callback<ResponseModel<EventModel>>() {
+            @Override
+            public void onResponse(Call<ResponseModel<EventModel>> call, Response<ResponseModel<EventModel>> response) {
+                callback.onSuccess(nextEvent); // TODO REMOVE HARDCODED
+                /*if(response.isSuccessful())
+                    callback.onSuccess(response.body().success);
+                else{
+                    try {
+                        ResponseModel r = new GsonBuilder().create().fromJson(response.errorBody().string(), ResponseModel.class);
+                        callback.onError(r.failure);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }*/
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseModel<EventModel>> call, Throwable t) {
+                //callback.onError(t.getMessage());
+
+                callback.onSuccess(nextEvent); // TODO REMOVE HARDCODED
             }
         });
     }
@@ -113,7 +179,7 @@ public enum UserService {
                         Request.Builder ongoing = chain.request().newBuilder();
                         ongoing.addHeader("Accept", "application/json;versions=1");
 
-                            ongoing.addHeader("auth", token);
+                        ongoing.addHeader("auth", token);
 
                         return chain.proceed(ongoing.build());
                     }

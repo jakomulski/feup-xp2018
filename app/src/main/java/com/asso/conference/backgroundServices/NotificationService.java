@@ -12,11 +12,16 @@ import android.widget.Toast;
 
 import com.asso.conference.HomeActivity;
 import com.asso.conference.R;
+import com.asso.conference.webClient.BookmarkCallback;
+import com.asso.conference.webClient.UserService;
 import com.asso.conference.webClient.WebClientService;
 import com.asso.conference.webClient.models.AuthModel;
+import com.asso.conference.webClient.models.EventModel;
 import com.asso.conference.webClient.models.LoginDataModel;
 import com.asso.conference.webClient.models.ResponseModel;
 import com.asso.conference.webClient.models.UserModel;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,9 +29,14 @@ import retrofit2.Response;
 
 public class NotificationService extends IntentService {
 
+        UserService userService = UserService.INSTANCE;
         private NotificationManager mNotificationManager;
-        public static final int NOTIFICATION_ID = 1;
+        PendingIntent contentIntent;
         WebClientService service;
+
+        private boolean isSending = false;
+        public int THREAD_SLEEP = 60000;
+        private int notificationCounter = 0;
 
         public NotificationService() {
                 super("Notification");
@@ -43,47 +53,46 @@ public class NotificationService extends IntentService {
                 mNotificationManager = (NotificationManager)
                         this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                contentIntent = PendingIntent.getActivity(this, 0,
                         new Intent(this, HomeActivity.class), 0);
 
-                //TODO long polling asking for next event here, upon success show notification
-                try {
-                        Thread.sleep(5000);
 
-                        NotificationCompat.Builder mBuilder =
-                                new NotificationCompat.Builder(this)
-                                        .setContentTitle("Session #1")
-                                        .setStyle(new NotificationCompat.BigTextStyle()
-                                                .bigText("Whassssup"))
-                                        .setContentText("Whassssup")
-                                        .setSmallIcon(R.drawable.xp2018_logo)
-                                        .setVibrate(new long[]{300,300});
-                        mBuilder.setContentIntent(contentIntent);
-                        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-                        Thread.sleep(5000);
-                        NotificationCompat.Builder mBuilder2 =
-                                new NotificationCompat.Builder(this)
-                                        .setContentTitle("Session #2")
-                                        .setStyle(new NotificationCompat.BigTextStyle()
-                                                .bigText("Whassssup2"))
-                                        .setContentText("Whassssup2")
-                                        .setSmallIcon(R.drawable.xp2018_logo)
-                                        .setVibrate(new long[]{300,300});
-                        mBuilder2.setContentIntent(contentIntent);
-                        mNotificationManager.notify(NOTIFICATION_ID+1, mBuilder2.build());
-                } catch (InterruptedException e) {
-                        NotificationCompat.Builder mBuilder2 =
-                                new NotificationCompat.Builder(this)
-                                        .setContentTitle("GONE")
-                                        .setStyle(new NotificationCompat.BigTextStyle()
-                                                .bigText("GONE"))
-                                        .setContentText("GONE")
-                                        .setSmallIcon(R.drawable.xp2018_logo)
-                                        .setVibrate(new long[]{300,300});
-                        mBuilder2.setContentIntent(contentIntent);
-                        mNotificationManager.notify(NOTIFICATION_ID+2, mBuilder2.build());
-                        // Restore interrupt status.
-                        Thread.currentThread().interrupt();
+                while(true) {
+                        try {
+                                Thread.sleep(THREAD_SLEEP);
+                                if (!isSending) {
+                                        isSending = true;
+                                        userService.getNextEvent( new BookmarkCallback<EventModel>() {
+                                                @Override
+                                                public void onSuccess(EventModel nextEvent) {
+                                                        popupNotification(nextEvent.name,nextEvent.description,nextEvent.minsToHappen);
+                                                        isSending = false;
+                                                }
+
+                                                @Override
+                                                public void onError(String message) {
+                                                        isSending = false;
+                                                }
+                                        });
+                                }
+                        } catch (InterruptedException e) {
+                                e.printStackTrace();
+                        }
                 }
+        }
+
+        private void popupNotification(String name, String description, int minsToHappen) {
+
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(this)
+                                .setContentTitle(name)
+                                .setStyle(new NotificationCompat.BigTextStyle()
+                                        .bigText(description + " (" + minsToHappen + " min.)"))
+                                .setContentText(description + " (" + minsToHappen + " min.)")
+                                .setSmallIcon(R.drawable.xp2018_logo)
+                                .setVibrate(new long[]{300,300});
+                mBuilder.setContentIntent(contentIntent);
+                mNotificationManager.notify(notificationCounter, mBuilder.build());
+                notificationCounter++;
         }
 }
