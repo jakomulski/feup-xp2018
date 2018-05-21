@@ -2,7 +2,18 @@
  {
    "FIELD1": "114",
    "FIELD2": "Towards Agile Scalability Engineering",
-   "FIELD3": "5/21/2018 17:48 PM",
+   "FIELD3": "5/21/2018 23:04 PM",
+   "FIELD4": "5/21/2018 23:04 PM",
+   "FIELD5": "Research",
+   "FIELD6": "",
+   "FIELD7": "Scalability engineering is currently not well integrated into agile de- velopment techniques. By scalability we mean the ability of a system to handle increasing workload. This paper extends agile development techniques so that scalability can also be handled. Using action research, we have conducted three pilots in three Norwegian software organizations. These three pilots have com- pletely different architectures and also operate in different markets, yet have in common scalability challenges. As a result, we describe common challenges for scalability engineering using agile development techniques and we propose the ScrumScale Method which includes scalability engineering in an incremental and iterative development process.",
+   "FIELD8": "Geir Kjetil Hanssen; Gunnar Brataas; Georg Ræder",
+   "FIELD9": "B002"
+ },
+ {
+   "FIELD1": "114",
+   "FIELD2": "Towards Agile Scalability Engineering",
+   "FIELD3": "5/21/2018 23:05 PM",
    "FIELD4": "5/21/2018 20:10 PM",
    "FIELD5": "Research",
    "FIELD6": "",
@@ -13,7 +24,7 @@
  {
    "FIELD1": "114",
    "FIELD2": "Towards Agile Scalability Engineering",
-   "FIELD3": "5/21/2018 17:50 PM",
+   "FIELD3": "5/21/2018 23:06 PM",
    "FIELD4": "5/21/2018 20:10 PM",
    "FIELD5": "Research",
    "FIELD6": "",
@@ -24,7 +35,7 @@
  {
    "FIELD1": "114",
    "FIELD2": "Towards Agile Scalability Engineering",
-   "FIELD3": "5/21/2018 17:59 PM",
+   "FIELD3": "5/21/2018 23:07 PM",
    "FIELD4": "5/21/2018 20:10 PM",
    "FIELD5": "Research",
    "FIELD6": "",
@@ -35,7 +46,7 @@
  {
    "FIELD1": "114",
    "FIELD2": "Towards Agile Scalability Engineering",
-   "FIELD3": "5/21/2018 17:58 PM",
+   "FIELD3": "5/21/2018 23:08 PM",
    "FIELD4": "5/21/2018 20:10 PM",
    "FIELD5": "Research",
    "FIELD6": "",
@@ -46,7 +57,7 @@
  {
    "FIELD1": "114",
    "FIELD2": "Towards Agile Scalability Engineering",
-   "FIELD3": "5/21/2018 17:57 PM",
+   "FIELD3": "5/21/2018 23:09 PM",
    "FIELD4": "5/21/2018 20:10 PM",
    "FIELD5": "Research",
    "FIELD6": "",
@@ -57,18 +68,7 @@
  {
    "FIELD1": "114",
    "FIELD2": "Towards Agile Scalability Engineering",
-   "FIELD3": "5/21/2018 17:56 PM",
-   "FIELD4": "5/21/2018 20:10 PM",
-   "FIELD5": "Research",
-   "FIELD6": "",
-   "FIELD7": "Scalability engineering is currently not well integrated into agile de- velopment techniques. By scalability we mean the ability of a system to handle increasing workload. This paper extends agile development techniques so that scalability can also be handled. Using action research, we have conducted three pilots in three Norwegian software organizations. These three pilots have com- pletely different architectures and also operate in different markets, yet have in common scalability challenges. As a result, we describe common challenges for scalability engineering using agile development techniques and we propose the ScrumScale Method which includes scalability engineering in an incremental and iterative development process.",
-   "FIELD8": "Geir Kjetil Hanssen; Gunnar Brataas; Georg Ræder",
-   "FIELD9": "B002"
- },
- {
-   "FIELD1": "114",
-   "FIELD2": "Towards Agile Scalability Engineering",
-   "FIELD3": "5/21/2018 17:55 PM",
+   "FIELD3": "5/21/2018 23:10 PM",
    "FIELD4": "5/21/2018 20:10 PM",
    "FIELD5": "Research",
    "FIELD6": "",
@@ -79,7 +79,7 @@
  {
    "FIELD1": "117",
    "FIELD2": "Developers' initial perceptions on TDD practice: A thematic analysis considering distinct domains and languages",
-   "FIELD3": "5/22/2018 3:00 PM",
+   "FIELD3": "5/22/2018 23:11 PM",
    "FIELD4": "5/22/2018 3:30 PM",
    "FIELD5": "Research",
    "FIELD6": "",
