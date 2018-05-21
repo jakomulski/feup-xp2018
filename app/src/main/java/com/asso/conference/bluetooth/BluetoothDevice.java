@@ -4,13 +4,13 @@ import com.asso.conference.webClient.models.BluetoothDeviceModel;
 
 public class BluetoothDevice {
     private String address;
-    private int roomId;
+    private String roomId;
     private int rssi;
     private long lastSignal;
     private float x;
     private float y;
 
-    public BluetoothDevice(String address, int roomId , float x, float y){
+    public BluetoothDevice(String address, String roomId , float x, float y){
         this.address = address;
         this.roomId = roomId;
         this.rssi = -100;
@@ -32,7 +32,7 @@ public class BluetoothDevice {
         return address;
     }
 
-    public int getRoomId() {
+    public String getRoomId() {
         return roomId;
     }
 

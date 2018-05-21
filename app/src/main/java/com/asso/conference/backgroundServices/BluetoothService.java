@@ -165,11 +165,9 @@ public class BluetoothService extends Service {
     private ScanCallback leScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
-            Log.d(">>>>>>>>>>>>>>>>>>",result.getDevice().getAddress());
             BluetoothDevice lastDevice = devices.get(result.getDevice().getAddress());
             if(lastDevice != null) {
                 if(devicesObserver != null) {
-                    Log.d("<<<<<<<<<<<<<<<<<<<<<",result.getDevice().getAddress());
                     lastDevice.setRssi(result.getRssi());
                     lastDevice.setLastSignal(System.currentTimeMillis());
                     devices.put(result.getDevice().getAddress(), lastDevice);
