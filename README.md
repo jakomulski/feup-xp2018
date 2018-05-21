@@ -159,6 +159,7 @@ The main differences are that now the micro:bit's only interact with themselves 
       Endpoints to the API.
 
 - HomeActivity
+
   Main app activity that handles everything on startup.
 
 ## Authors
