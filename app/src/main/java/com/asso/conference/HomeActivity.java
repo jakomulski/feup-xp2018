@@ -96,8 +96,6 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //ActiveAndroid.initialize(this);
 
-
-
         // Start notifications service
         Intent notificationIntent = new Intent(this, NotificationService.class);
         startService(notificationIntent);
@@ -108,57 +106,13 @@ public class HomeActivity extends AppCompatActivity {
         if (btAdapter != null && !btAdapter.isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent,REQUEST_ENABLE_BT);
+        }else {
+            checkLocationPermission();
         }
-        // Make sure we have access coarse location enabled, if not, prompt the user to enable it
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("This app needs location access");
-                builder.setMessage("Please grant location access so this app can detect peripherals.");
-                builder.setPositiveButton(android.R.string.ok, null);
-                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
-                        }
-                    }
-                });
-                builder.show();
-            }
-        }
-
-        // Start bluetooth service
-        Intent bluetoothIntent = new Intent(this, BluetoothService.class);
-        startService(bluetoothIntent);
-        serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                Log.d("Homepage","BlueMAX service bound");
-                service = ((BluetoothService.LocalBinder)iBinder).getService();
-                disposable = service.observeDevices()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(devices -> {
-                            //toolbar.setSubtitle(devices.get("C4:BE:84:49:DD:7E").getRssi()+"");
-                            bluetoothDevices = devices;
-                        });
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-                Log.d("Homepage","Service disconnected");
-            }
-        };
-        bindService(new Intent( this, BluetoothService.class), serviceConnection, BIND_AUTO_CREATE);
 
         // Start queue pop requests service
         Intent BeaconQueuePopIntent = new Intent(this, BeaconQueuePopService.class);
         startService(BeaconQueuePopIntent);
-
-        // Start queue push requests service
-        Intent BeaconQueuePushIntent = new Intent(this, BeaconQueuePushService.class);
-        startService(BeaconQueuePushIntent);
 
 
         if (android.os.Build.VERSION.SDK_INT > 9)
@@ -207,6 +161,59 @@ public class HomeActivity extends AppCompatActivity {
                 prevMenuItem = navigation.getMenu().getItem(position);
             }
         });
+    }
+
+    private void checkLocationPermission() {
+        // Make sure we have access coarse location enabled, if not, prompt the user to enable it
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("This app needs location access");
+                builder.setMessage("Please grant location access so this app can detect peripherals.");
+                builder.setPositiveButton(android.R.string.ok, null);
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+                        }
+                    }
+                });
+                builder.show();
+            } else {
+                startBluetoothAndBeaconService();
+            }
+        } else {
+            startBluetoothAndBeaconService();
+        }
+    }
+
+    private void startBluetoothAndBeaconService() {
+        // Start bluetooth service
+        Intent bluetoothIntent = new Intent(this, BluetoothService.class);
+        startService(bluetoothIntent);
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                Log.d("Homepage","Bluetooth service bound");
+                service = ((BluetoothService.LocalBinder)iBinder).getService();
+                disposable = service.observeDevices()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(devices -> {
+                            bluetoothDevices = devices;
+                        });
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                Log.d("Homepage","Service disconnected");
+            }
+        };
+        bindService(new Intent( this, BluetoothService.class), serviceConnection, BIND_AUTO_CREATE);
+
+        // Start queue push requests service
+        Intent BeaconQueuePushIntent = new Intent(this, BeaconQueuePushService.class);
+        startService(BeaconQueuePushIntent);
     }
 
     private void setupViewPager(ViewPager viewPager)
@@ -283,17 +290,18 @@ public class HomeActivity extends AppCompatActivity {
     protected void onDestroy() {
         if(disposable != null)
             disposable.dispose();
-        unbindService(serviceConnection);
+        if (serviceConnection != null)
+            unbindService(serviceConnection);
         super.onDestroy();
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_REQUEST_COARSE_LOCATION: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     System.out.println("coarse location permission granted");
+                    startBluetoothAndBeaconService();
                 } else {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Functionality limited");
@@ -312,5 +320,19 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+// TODO Auto-generated method stub
+        if(requestCode == REQUEST_ENABLE_BT){
+            if (resultCode == RESULT_OK){
+                checkLocationPermission();
+            }
+            if(resultCode == RESULT_CANCELED){
+                Toast.makeText(getApplicationContext(), "Error occured while enabling. Beacons functionality won't work properly", Toast.LENGTH_LONG).show();
+                ///finish();
+            }
+        }
+    }//onActivityResult
 
 }

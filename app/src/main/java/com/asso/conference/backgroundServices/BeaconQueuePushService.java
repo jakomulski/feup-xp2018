@@ -52,7 +52,7 @@ public class BeaconQueuePushService extends IntentService{
         serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                Log.d("Beacon Queue Push","BlueMAX service bound");
+                Log.d("Beacon Queue Push","Bluetooth service bound");
                 service = ((BluetoothService.LocalBinder)iBinder).getService();
                 disposable = service.observeDevices()
                         .observeOn(AndroidSchedulers.mainThread())
