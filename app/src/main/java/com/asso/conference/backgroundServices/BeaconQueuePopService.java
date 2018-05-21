@@ -60,8 +60,16 @@ public class BeaconQueuePopService extends IntentService{
 
                             @Override
                             public void onError(String message) {
-                                isSending = false;
+                                if(message.equals("Error: No session found for beacon event!")){
+                                    try {
+                                        beaconQueue.pop();
+                                    } catch (IOException e) {
+                                    }
+                                    sendingWasSuccess = true;
+                                } else {
                                 sendingWasSuccess = false;
+                                }
+                                isSending = false;
                             }
                         });
                     } catch (IOException e) {

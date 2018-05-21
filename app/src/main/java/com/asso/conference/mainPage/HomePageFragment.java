@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,16 +120,18 @@ public class HomePageFragment extends Fragment {
             // TextView to show roomId of device
             TextView roomId = new TextView(this.getContext());
             roomId.setText(btDevice.getRoomId()+"");
+            roomId.setGravity(Gravity.CENTER_HORIZONTAL);
             RelativeLayout.LayoutParams roomIdLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-            roomIdLayoutParams.leftMargin = layoutParams.leftMargin + 13;
+            roomIdLayoutParams.leftMargin = layoutParams.leftMargin;
             roomIdLayoutParams.topMargin = layoutParams.topMargin - 50;
             devicesView.addView(roomId, roomIdLayoutParams);
 
             // TextView to show rssi of device
             TextView rssi = new TextView(this.getContext());
             Date d = new Date(btDevice.getLastSignal());
-            rssi.setText(btDevice.getRssi()+"\n(" + d.getHours() +":"+d.getMinutes() +":" + d.getSeconds() +")");
+            rssi.setText((btDevice.getRssi()+100)+"%\n(" + d.getHours() +":"+d.getMinutes() +":" + d.getSeconds() +")");
+            rssi.setGravity(Gravity.CENTER_HORIZONTAL);
             RelativeLayout.LayoutParams rssiLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
 
             rssiLayoutParams.leftMargin = layoutParams.leftMargin;
