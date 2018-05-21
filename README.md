@@ -9,6 +9,11 @@ This application is designed to be used by the XP 2018 Conference participants a
 - Schedule of the event
 - Custom notifications of the upcoming events
 
+## How to install it
+The app is not published in any Android market but you can download it by [**CLICKING HERE**](https://github.com/telmobarros/xp-2018-android/raw/master/app/release/xp2018.apk) or scanning the QR Code below. You will also need to allow the "Unkown sources" definition in your device, in case it is not already enabled.
+
+<img src="./docs/download.png" width="300">
+
 ## How to use it
 ### 1. Register
 In case this is the first time using the app, you need to allow the following permissions: location, bluetooth and storage access. These permissions will allow you to enjoy the app to the fullest.
