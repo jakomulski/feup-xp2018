@@ -30,27 +30,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public enum UserService {
     INSTANCE;
 
-    Retrofit retrofit = null;
-
     WebClientService service;
-    WebClientService gitHubService;
+    GithubService gitHubService;
 
     UserService(){
         if(AuthDBModel.exists()){
             AuthDBModel authDBModel = AuthDBModel.getFirst();
-            createAuthenticatedClient(authDBModel.key);
+            service  = WebClientService.createAuthenticatedClient(authDBModel.key);
         }
         else
-            createClient();
-
-        service = retrofit.create(WebClientService.class);
-
-        Retrofit gitHubRetrofit = new Retrofit.Builder()
-                .baseUrl("https://raw.githubusercontent.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        gitHubRetrofit.create(WebClientService.class);
-        gitHubService = gitHubRetrofit.create(WebClientService.class);
+            service  = WebClientService.createClient();
+        gitHubService = GithubService.getClient();
     }
 
     public void sendBeacon(BeaconModel beaconModel, final BookmarkCallback<String> callback){
@@ -146,67 +136,6 @@ public enum UserService {
     }
 
 
-    public boolean isAuthenticated(BookmarkCallback<UserModel> callback){
-        if(AuthDBModel.exists()){
-            AuthDBModel authDBModel = AuthDBModel.getFirst();
-            final Call<ResponseModel<UserModel>> call = service.getUser(authDBModel.userId);
-            call.enqueue(new Callback<ResponseModel<UserModel>>() {
-                @Override
-                public void onResponse(Call<ResponseModel<UserModel>> call, Response<ResponseModel<UserModel>> response) {
-                    if(response.isSuccessful())
-                        callback.onSuccess(response.body().success);
-                    else {
-                        callback.onError(response.errorBody().toString());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseModel<UserModel>> call, Throwable t) {
-                    callback.onError(t.getMessage());
-                }
-            });
-            return true;
-            /*try {
-                if(call.execute().isSuccessful())
-                    return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
-        }
-        return false;
-    }
-
-    private void createClient(){
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BuildConfig.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        retrofit.create(WebClientService.class);
-    }
-
-    public void createAuthenticatedClient(final String token){
-        OkHttpClient httpClient = new OkHttpClient.Builder()
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
-                        Request.Builder ongoing = chain.request().newBuilder();
-                        ongoing.addHeader("Accept", "application/json;versions=1");
-
-                        ongoing.addHeader("auth", token);
-
-                        return chain.proceed(ongoing.build());
-                    }
-                })
-                .build();
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BuildConfig.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient)
-                .build();
-        retrofit.create(WebClientService.class);
-        service = retrofit.create(WebClientService.class);
-    }
-
     public void signUp(UserModel user, final BookmarkCallback<AuthModel> callback) {
         Call<ResponseModel<AuthModel>> call = service.createUser(user);
         call.enqueue(new Callback<ResponseModel<AuthModel>>() {
@@ -256,7 +185,7 @@ public enum UserService {
         });
     }
 
-
-
-
+    public void createAuthenticatedClient(String token) {
+        this.service = WebClientService.createAuthenticatedClient(token);
+    }
 }
