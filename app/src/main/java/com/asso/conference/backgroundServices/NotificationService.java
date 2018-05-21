@@ -124,7 +124,7 @@ public class NotificationService extends IntentService {
 
         while(!queue.isEmpty()){
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MINUTE, -5);
+            calendar.add(Calendar.MINUTE, 5);
             Date time = calendar.getTime();
             for(XpEvent event = queue.peek(); time.after(event.FIELD3); event = queue.peek()){
                 popupNotification(event.FIELD2, event.FIELD8, 5);
