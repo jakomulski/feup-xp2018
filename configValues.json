@@ -10,9 +10,15 @@
   "x":0.5,
   "y": 0.9
  },{
-  "address":"A0:E9:DB:08:49:C2",
+
+   "address":"A0:E9:DB:08:49:C2",
   "roomId":"B217",
   "x":0.9,
   "y": 0.5
+ },{
+   "address":"64:6e:69:e2:89:08",
+   "roomId":"Auditorium",
+   "x":0.2,
+   "y": 0.5
  }]
 }
