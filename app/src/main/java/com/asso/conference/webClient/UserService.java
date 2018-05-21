@@ -1,5 +1,8 @@
 package com.asso.conference.webClient;
 
+import android.os.Debug;
+import android.util.Log;
+
 import com.asso.conference.BuildConfig;
 import com.asso.conference.bluetooth.BluetoothDevice;
 import com.asso.conference.db.AuthDBModel;
@@ -30,6 +33,7 @@ public enum UserService {
     Retrofit retrofit = null;
 
     WebClientService service;
+    WebClientService gitHubService;
 
     UserService(){
         if(AuthDBModel.exists()){
@@ -40,6 +44,13 @@ public enum UserService {
             createClient();
 
         service = retrofit.create(WebClientService.class);
+
+        Retrofit gitHubRetrofit = new Retrofit.Builder()
+                .baseUrl("https://raw.githubusercontent.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        gitHubRetrofit.create(WebClientService.class);
+        gitHubService = gitHubRetrofit.create(WebClientService.class);
     }
 
     public void sendBeacon(BeaconModel beaconModel, final BookmarkCallback<String> callback){
@@ -74,11 +85,11 @@ public enum UserService {
         BluetoothDeviceModel bt100 = new BluetoothDeviceModel("A0:E9:DB:08:49:C2", 3,0.9f,0.5f);
 
         BluetoothDeviceModel[] bts = new BluetoothDeviceModel[] {midi, sensorTag, bt100};
-        Call<ResponseModel<BluetoothDeviceModel[]>> call = service.getBluetoothDevices();
+        Call<ResponseModel<BluetoothDeviceModel[]>> call = gitHubService.getBluetoothDevices();
         call.enqueue(new Callback<ResponseModel<BluetoothDeviceModel[]>>() {
             @Override
             public void onResponse(Call<ResponseModel<BluetoothDeviceModel[]>> call, Response<ResponseModel<BluetoothDeviceModel[]>> response) {
-
+                Log.d("BT DEVICES", response);
                 callback.onSuccess(bts); // TODO REMOVE HARDCODED
                 /*if(response.isSuccessful())
                     callback.onSuccess(response.body().success);

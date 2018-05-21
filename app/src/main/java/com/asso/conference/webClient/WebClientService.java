@@ -27,7 +27,7 @@ public interface WebClientService {
     @POST("event/beacon")
     Call<ResponseModel<String>> sendBeacon(@Body BeaconModel beaconModel);
 
-    @GET("bluetoothDevices")
+    @GET("telmobarros/xp-2018-android/master/bluetoothDevices.json")
     Call<ResponseModel<BluetoothDeviceModel[]>> getBluetoothDevices();
 
     @GET("nextEvent")
