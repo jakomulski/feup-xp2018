@@ -31,6 +31,8 @@ import com.asso.conference.webClient.models.XpEvent;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -100,17 +102,13 @@ public class NotificationService extends IntentService {
         contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, HomeActivity.class), 0);
 
+        PriorityQueue<XpEvent> queue = null;
 
-
-
-
-        while (true) {
-
-
+        while (queue == null) {
                 try {
                     Response<List<XpEvent>> response = githubService.getXpEvents().execute();
                     if(response.isSuccessful()){
-                        createQueue(response.body());
+                        queue = createQueue(response.body());
                         break;
                     }
                 } catch (IOException e) {
@@ -121,7 +119,22 @@ public class NotificationService extends IntentService {
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+        }
 
+        while(!queue.isEmpty()){
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MINUTE, -5);
+            Date time = calendar.getTime();
+            for(XpEvent event = queue.peek(); time.after(event.FIELD3); event = queue.peek()){
+                popupNotification(event.FIELD2, event.FIELD8, 5);
+                queue.poll();
+            }
+
+            try {
+                Thread.sleep(THREAD_SLEEP);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -130,21 +143,20 @@ public class NotificationService extends IntentService {
         PriorityQueue<XpEvent> queue = new PriorityQueue(100, new Comparator<XpEvent>() {
             @Override
             public int compare(XpEvent e1, XpEvent e2) {
-                return e1.FIELD3.compareTo(e2.FIELD4);
+                return e1.FIELD3.compareTo(e2.FIELD3);
             }
         });
+        Date currentTime = Calendar.getInstance().getTime();
 
         for(XpEvent e : events){
-            if(e!= null && e.FIELD3 != null)
+            if(e!= null && e.FIELD3 != null && e.FIELD3.after(currentTime))
                 queue.add(e);
         }
-
         return queue;
     }
 
 
     private void popupNotification(String name, String description, int minsToHappen) {
-
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setContentTitle(name)
