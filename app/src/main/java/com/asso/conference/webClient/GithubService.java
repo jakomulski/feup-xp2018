@@ -27,7 +27,7 @@ public interface GithubService {
     @GET("telmobarros/xp-2018-android/master/configValues.json")
     Call<ResponseModel<BluetoothDeviceModel[]>> getBluetoothDevices();
 
-    @GET("telmobarros/xp-2018-android/master/xpevents_test.json")
+    @GET("telmobarros/xp-2018-android/master/xpevents.json")
     Call<List<XpEvent>> getXpEvents();
 
 

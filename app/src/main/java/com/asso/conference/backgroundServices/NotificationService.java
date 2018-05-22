@@ -13,6 +13,7 @@ import android.os.Debug;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.asso.conference.HomeActivity;
@@ -121,6 +122,8 @@ public class NotificationService extends IntentService {
                 e.printStackTrace();
             }
         }
+
+
 
         while(!queue.isEmpty()){
             Calendar calendar = Calendar.getInstance();

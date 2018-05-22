@@ -29,8 +29,8 @@ public class DateDeserializer implements JsonDeserializer<Date> {
             Date date = formatter.parse(dateText);
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
-            cal.add(Calendar.HOUR_OF_DAY, -1);
-            cal.add(Calendar.DAY_OF_MONTH, 1);
+            //cal.add(Calendar.HOUR_OF_DAY, -1);
+            //cal.add(Calendar.DAY_OF_MONTH, 1);
             return cal.getTime();
         } catch (ParseException e) {
             Log.e("Failed to parse Date", e.getMessage());
