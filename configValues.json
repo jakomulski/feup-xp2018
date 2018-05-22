@@ -1,8 +1,8 @@
 {
  "bluetoothDevices": [{
   "address":"C4:BE:84:49:DD:7E",
-  "roomId":"B002",
-  "x":0.3,
+  "roomId":"XPSpaces",
+  "x":0.4,
   "y": 0.1
  },{
   "address":"B0:B4:48:BC:E5:82",
